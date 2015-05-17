@@ -16,13 +16,31 @@ public trait Curve {
 
 abstract class AbstractCurve(val cubics: Kubika) : Curve {
     protected val immutableListOfLines: List<Triple<Point3D, Point3D, Color>> by Delegates.lazy {
-        return@lazy  computeLines()
+        return@lazy computeLines()
     }
     abstract protected fun computeLines(): List<Triple<Point3D, Point3D, Color>>
 
     override public fun getLines(): List<Triple<Point3D, Point3D, Color>> {
         return immutableListOfLines
     }
+
+    protected fun computeLines(begin: Point3D, numberOfLines: Int, color: Color): List<Triple<Point3D, Point3D, Color>> {
+        val list: MutableList<Triple<Point3D, Point3D, Color>> = ArrayList()
+        val isCoonsCubics = cubics == Cubics.coons
+
+        var puv = begin
+        for (i in 1..numberOfLines) {
+            val t = i.toFloat() / numberOfLines
+            val nas = cubics.compute(t.toDouble())
+            if (!isCoonsCubics || i != 0) {
+                list.add(Triple(puv, nas, color))
+            }
+            puv = nas
+        }
+
+        return ArrayList(list)
+    }
+
 }
 
 
@@ -35,31 +53,22 @@ public class BezierCurve(val begin: Point3D = Point3D(),
                 : AbstractCurve(Cubics.bezier) {
 
     override protected final fun computeLines(): List<Triple<Point3D, Point3D, Color>> {
-        val list: MutableList<Triple<Point3D, Point3D, Color>> = ArrayList()
         cubics.init(begin, vectorBegin, vectorEnd, end)
-
-        var puv = begin
-        for (i in 1..numberOfLines) {
-            val t = i.toFloat() / numberOfLines
-            val nas = cubics.compute(t.toDouble())
-            list.add(Triple(puv, nas, color))
-            puv = nas
-        }
-
-        return ArrayList(list)
+        return computeLines(begin = begin, numberOfLines = numberOfLines, color = color)
     }
 }
 
 public class FergusonCurve(val begin: Point3D = Point3D(),
-                           val secondPoint: Point3D = Point3D(),
-                           val thirdPoint: Point3D = Point3D(),
+                           val vectorBegin: Point3D = Point3D(),
                            val end: Point3D = Point3D(),
+                           val vectorEnd: Point3D = Point3D(),
                            val color: Color = Color.WHITE,
                            val numberOfLines: Int = 20)
                 : AbstractCurve(Cubics.ferguson) {
 
     override protected fun computeLines(): List<Triple<Point3D, Point3D, Color>> {
-        throw UnsupportedOperationException("Not implemented yet")
+        cubics.init(begin, end, vectorBegin, vectorEnd)
+        return computeLines(begin = begin, numberOfLines = numberOfLines, color = color)
     }
 }
 
@@ -73,7 +82,8 @@ public class CoonsCurve(val begin: Point3D = Point3D(),
                 : AbstractCurve(Cubics.coons) {
 
     override protected fun computeLines(): List<Triple<Point3D, Point3D, Color>> {
-        throw UnsupportedOperationException("Not implemented yet")
+        cubics.init(begin, secondPoint, thirdPoint, end)
+        return computeLines(begin = begin, numberOfLines = numberOfLines, color = color)
     }
 }
 

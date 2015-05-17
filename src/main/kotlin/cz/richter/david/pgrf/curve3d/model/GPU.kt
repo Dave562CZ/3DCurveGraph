@@ -40,7 +40,7 @@ public class GPU() : GLEventListener, KeyListener, MouseMotionListener, MouseLis
 
     override fun display(drawable: GLAutoDrawable?) {
         val gl = this.gl //optimalization not sure how expensive is calling delegate
-        gl.glClearColor(0.0.toFloat(), 0.0.toFloat(), 0.0.toFloat(), 0.0.toFloat())
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
         // nulujeme misto pro kresleni
         gl.glClear(GL.GL_COLOR_BUFFER_BIT)
 
