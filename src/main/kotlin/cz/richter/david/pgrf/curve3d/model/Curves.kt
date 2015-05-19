@@ -1,5 +1,6 @@
 package cz.richter.david.pgrf.curve3d.model
 
+import com.sun.javaws.exceptions.InvalidArgumentException
 import transforms3D.Kubika
 import transforms3D.Point3D
 import java.awt.Color
@@ -12,6 +13,10 @@ import kotlin.properties.Delegates
  */
 public trait Curve {
     public fun getLines(): List<Triple<Point3D, Point3D, Color>>
+
+    public fun get(index: Int): String
+
+    public fun getCurveColor(): Color
 }
 
 abstract class AbstractCurve(val cubics: Kubika) : Curve {
@@ -32,7 +37,7 @@ abstract class AbstractCurve(val cubics: Kubika) : Curve {
         for (i in 1..numberOfLines) {
             val t = i.toFloat() / numberOfLines
             val nas = cubics.compute(t.toDouble())
-            if (!isCoonsCubics || i != 0) {
+            if (!isCoonsCubics || i != 1) {
                 list.add(Triple(puv, nas, color))
             }
             puv = nas
@@ -52,6 +57,17 @@ public class BezierCurve(val begin: Point3D = Point3D(),
                          val numberOfLines: Int = 20)
                 : AbstractCurve(Cubics.bezier) {
 
+    override fun getCurveColor(): Color = color
+
+    override fun get(index: Int): String {
+        return when (index) {
+            0 -> "Bezier cubics"
+            1 -> begin.getCoordsString() + end.getCoordsString()
+            2 -> vectorBegin.getCoordsString() + vectorEnd.getCoordsString()
+            else -> throw InvalidArgumentException(arrayOf("Index can be only in range 0 - 2"))
+        }
+    }
+
     override protected final fun computeLines(): List<Triple<Point3D, Point3D, Color>> {
         cubics.init(begin, vectorBegin, vectorEnd, end)
         return computeLines(begin = begin, numberOfLines = numberOfLines, color = color)
@@ -65,6 +81,17 @@ public class FergusonCurve(val begin: Point3D = Point3D(),
                            val color: Color = Color.WHITE,
                            val numberOfLines: Int = 20)
                 : AbstractCurve(Cubics.ferguson) {
+
+    override fun getCurveColor(): Color = color
+
+    override fun get(index: Int): String {
+        return when (index) {
+            0 -> "Ferguson cubics"
+            1 -> begin.getCoordsString() + end.getCoordsString()
+            2 -> vectorBegin.getCoordsString() + vectorEnd.getCoordsString()
+            else -> throw InvalidArgumentException(arrayOf("Index can be only in range 0 - 2"))
+        }
+    }
 
     override protected fun computeLines(): List<Triple<Point3D, Point3D, Color>> {
         cubics.init(begin, end, vectorBegin, vectorEnd)
@@ -81,6 +108,17 @@ public class CoonsCurve(val begin: Point3D = Point3D(),
                         val numberOfLines: Int = 20)
                 : AbstractCurve(Cubics.coons) {
 
+    override fun getCurveColor(): Color = color
+
+    override fun get(index: Int): String {
+        return when (index) {
+            0 -> "Coons cubics"
+            1 -> begin.getCoordsString() + end.getCoordsString()
+            2 -> secondPoint.getCoordsString() + thirdPoint.getCoordsString()
+            else -> throw InvalidArgumentException(arrayOf("Index can be only in range 0 - 2"))
+        }
+    }
+
     override protected fun computeLines(): List<Triple<Point3D, Point3D, Color>> {
         cubics.init(begin, secondPoint, thirdPoint, end)
         return computeLines(begin = begin, numberOfLines = numberOfLines, color = color)
@@ -91,5 +129,9 @@ object Cubics {
     val bezier = Kubika(0)
     val ferguson = Kubika(1)
     val coons = Kubika(2)
+}
+
+fun Point3D.getCoordsString(): String {
+    return "[${x}; ${y}; ${z}]"
 }
 

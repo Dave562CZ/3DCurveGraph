@@ -15,7 +15,7 @@ import kotlin.properties.Delegates
  * @author D.Richter
  * @since 16.5.2015
  */
-public class GPU() : GLEventListener, KeyListener, MouseMotionListener, MouseListener {
+public class GPU(val curves: List<Curve>) : GLEventListener, KeyListener, MouseMotionListener, MouseListener {
 
     private val variables: MutableMap<in String, Any?> = HashMap()
     private val gl: GL2 by Delegates.mapVal(variables)
@@ -71,19 +71,13 @@ public class GPU() : GLEventListener, KeyListener, MouseMotionListener, MouseLis
         gl.glEnd()
 
         gl.glLineWidth(5.0f)
-        gl.glColor3f(0.0.toFloat(), 0.7.toFloat(), 0.0.toFloat())
-
-        val list = BezierCurve(
-                begin = Point3D(-0.5, 0.0, 0.0),
-                vectorBegin = Point3D(-0.7, 0.8, 1.0),
-                end = Point3D(0.5, 0.0, 0.0),
-                vectorEnd = Point3D(0.8, -0.5, 0.0),
-                color = Color.YELLOW).getLines()
         gl.glBegin(GL.GL_LINES)
-        for ((begin, end, color) in list) {
-            gl.glColor3ub(color.getRed().toByte(), color.getGreen().toByte(), color.getBlue().toByte())
-            gl.glVertex3d(begin.x, begin.y, begin.z)
-            gl.glVertex3d(end.x, end.y, end.z)
+        for (curve in curves) {
+            for ((begin, end, color) in curve.getLines()) {
+                gl.glColor3ub(color.getRed().toByte(), color.getGreen().toByte(), color.getBlue().toByte())
+                gl.glVertex3d(begin.x, begin.y, begin.z)
+                gl.glVertex3d(end.x, end.y, end.z)
+            }
         }
         gl.glEnd()
     }
