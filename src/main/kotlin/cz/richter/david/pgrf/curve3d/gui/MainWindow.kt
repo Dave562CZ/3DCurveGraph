@@ -10,23 +10,24 @@ import transforms3D.Point3D
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
+import java.awt.event.*
 import java.util.ArrayList
 import java.util.HashMap
-import javax.swing.JFrame
-import javax.swing.JScrollPane
-import javax.swing.JTable
+import javax.swing.*
 import kotlin.properties.Delegates
 
 /**
 * @author D.Richter
 * @since 16.5.2015
 */
-public class MainWindow() : JFrame() {
+public class MainWindow() : JFrame(), MouseListener, ActionListener {
     private val FPS = 30
 
     private val curves: MutableList<Curve> = ArrayList()
+
+    private val curvesTable = JTable()
+    private val butAddCurve = JButton("Add")
+    private val butRemoveCurve = JButton("Remove")
 
     private val canvas : GLCanvas by Delegates.lazy {
         // setup OpenGL Version 2
@@ -73,12 +74,21 @@ public class MainWindow() : JFrame() {
     }
 
     private fun initCurvesTable() {
-        val curvesTable = JTable()
+        val vertBox = Box.createVerticalBox()
+        val buttonBox = Box.createHorizontalBox()
+        buttonBox.add(butAddCurve)
+        butAddCurve.addActionListener(this)
+        butRemoveCurve.addActionListener(this)
+        buttonBox.add(butRemoveCurve)
+        vertBox.add(buttonBox)
+
         val curvesTableModel = CurvesTableModel(curves)
         curvesTable.setModel(curvesTableModel)
         curvesTable.setDefaultRenderer(Any().javaClass , curvesTableModel)
+        curvesTable.addMouseListener(this)
         val scrollPane = JScrollPane(curvesTable)
-        add(scrollPane, BorderLayout.EAST)
+        vertBox.add(scrollPane)
+        add(vertBox, BorderLayout.EAST)
     }
 
     private fun initAnimator(canvas: GLCanvas): FPSAnimator {
@@ -112,5 +122,43 @@ public class MainWindow() : JFrame() {
         val fSize = getSize()
         val sSize = getToolkit().getScreenSize()
         setLocation((sSize.width / 2) - (fSize.width / 2), (sSize.height / 2) - (fSize.height / 2))
+    }
+
+    override fun mouseEntered(e: MouseEvent) {}
+
+    override fun mouseClicked(e: MouseEvent) {
+        val source = e.getSource()
+        if (e.getClickCount() == 2 && source is JTable) {
+            val editDialog = CurveSettingsDialog(curves, source.getSelectedRow(), source.getModel())
+            editDialog.initGui()
+        }
+    }
+
+    override fun mouseReleased(e: MouseEvent) {}
+
+    override fun mouseExited(e: MouseEvent) {}
+
+    override fun mousePressed(e: MouseEvent) {}
+
+    override fun actionPerformed(e: ActionEvent) {
+        val source = e.getSource()
+        if (source is JButton) {
+            when (source) {
+                butAddCurve -> {
+                    val dialog = CurveSettingsDialog(curves = curves, tableModel = curvesTable.getModel())
+                    dialog.initGui()
+                }
+                butRemoveCurve -> {
+                    if (JOptionPane.showConfirmDialog(this, "Are you sure you want to remove this curve", "Remove curve", JOptionPane.YES_NO_OPTION) == 0) {
+                        curves.remove(curvesTable.getSelectedRow())
+                        val model = curvesTable.getModel()
+                        if (model is CurvesTableModel) {
+                            model.fireTableDataChanged()
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

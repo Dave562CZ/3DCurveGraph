@@ -37,6 +37,10 @@ public class CurvesTableModel(private val curves: List<Curve>) : AbstractTableMo
     override fun getValueAt(rowIndex: Int, columnIndex: Int): Any? {
         return curves[rowIndex][columnIndex]
     }
+
+    override public fun fireTableDataChanged() {
+        super<AbstractTableModel>.fireTableDataChanged()
+    }
 }
 
 
