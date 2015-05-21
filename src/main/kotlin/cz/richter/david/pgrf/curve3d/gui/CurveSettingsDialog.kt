@@ -4,6 +4,7 @@ import cz.richter.david.pgrf.curve3d.model.*
 import transforms3D.Point3D
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.*
@@ -31,7 +32,8 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
     private val labelFourth = JLabel(labelNamesBezierAndFerguson[3])
     private val textFourth = JTextField()
 
-    private val chooserColor = JColorChooser(Color.CYAN)
+    private val butColChooser = JButton("Pick color")
+    private var pickedColor = Color.WHITE
 
     private val butOK = JButton("OK")
     private val butCancel = JButton("Cancel")
@@ -53,7 +55,8 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
         }
         val labels = if (curve != null && curve is CoonsCurve) labelNamesCoons else labelNamesBezierAndFerguson
         setLabelsTexts(labels)
-        pack()
+        tryToCenterWindow()
+        setModal(true)
         setVisible(true)
     }
 
@@ -71,7 +74,7 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
         textSecond.setText(p2.getTextForTA())
         textThird.setText(p3.getTextForTA())
         textFourth.setText(p4.getTextForTA())
-        chooserColor.setColor(color)
+        pickedColor = color
     }
 
     private fun setLabelsTexts(labels: Array<String>) {
@@ -82,47 +85,38 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
     }
 
     private fun initSettingsPanel() {
-        val vertBox = Box.createVerticalBox()
+        val vertBox = JPanel(GridLayout(7, 2, 5, 5))
 
-        val boxType = Box.createHorizontalBox()
         val labelType = JLabel("Type of cubics")
         comboType.setModel(DefaultComboBoxModel(arrayOf("Bezier", "Ferguson", "Coons")))
-        boxType.add(labelType)
-        boxType.add(comboType)
-        vertBox.add(boxType)
+        comboType.addActionListener(this)
+        vertBox.add(labelType)
+        vertBox.add(comboType)
 
-        val boxFirst = Box.createHorizontalBox()
-        boxFirst.add(labelFirst)
-        boxFirst.add(textFirst)
-        vertBox.add(boxFirst)
+        vertBox.add(labelFirst)
+        vertBox.add(textFirst)
 
-        val boxSecond = Box.createHorizontalBox()
-        boxSecond.add(labelSecond)
-        boxSecond.add(textSecond)
-        vertBox.add(boxSecond)
+        vertBox.add(labelSecond)
+        vertBox.add(textSecond)
 
-        val boxThird = Box.createHorizontalBox()
-        boxThird.add(labelThird)
-        boxThird.add(textThird)
-        vertBox.add(boxThird)
+        vertBox.add(labelThird)
+        vertBox.add(textThird)
 
-        val boxFourth = Box.createHorizontalBox()
-        boxFourth.add(labelFourth)
-        boxFourth.add(textFourth)
-        vertBox.add(boxFourth)
+        vertBox.add(labelFourth)
+        vertBox.add(textFourth)
 
-        val boxColor = Box.createHorizontalBox()
         val labelColor = JLabel("Color of curve")
-        boxColor.add(labelColor)
-        boxColor.add(chooserColor)
-        vertBox.add(boxColor)
 
-        val boxButtons = Box.createHorizontalBox()
+        butColChooser.addActionListener(this)
+        vertBox.add(labelColor)
+        vertBox.add(butColChooser)
+
         butOK.addActionListener(this)
         butCancel.addActionListener(this)
-        boxButtons.add(butOK)
-        boxButtons.add(butCancel)
-        vertBox.add(boxButtons)
+        vertBox.add(butOK)
+        vertBox.add(butCancel)
+
+        vertBox.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15))
         add(vertBox)
     }
 
@@ -131,6 +125,19 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
         when (source) {
             butOK -> createAndSetCurve()
             butCancel -> dispose()
+            butColChooser -> {
+                val color = JColorChooser.showDialog(this, "Pick Color", pickedColor)
+                if (color != null) {
+                    pickedColor = color
+                }
+            }
+            comboType -> {
+                if (comboType.getSelectedIndex() == 2) {
+                    setLabelsTexts(labelNamesCoons)
+                } else {
+                    setLabelsTexts(labelNamesBezierAndFerguson)
+                }
+            }
         }
     }
 
@@ -140,7 +147,7 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
         val p2 = parsePoint(textSecond.getText().trim())
         val p3 = parsePoint(textThird.getText().trim())
         val p4 = parsePoint(textFourth.getText().trim())
-        val color = chooserColor.getColor()
+        val color = pickedColor
         val curve: Curve = when (indexOfType) {
             0 -> BezierCurve(
                     begin = p1,

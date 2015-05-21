@@ -7,9 +7,7 @@ import com.jogamp.opengl.util.FPSAnimator
 import cz.richter.david.pgrf.curve3d.model.*
 import transforms3D.Kubika
 import transforms3D.Point3D
-import java.awt.BorderLayout
-import java.awt.Color
-import java.awt.Dimension
+import java.awt.*
 import java.awt.event.*
 import java.util.ArrayList
 import java.util.HashMap
@@ -38,7 +36,7 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
 
     public fun initGui() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
-        setTitle("Vykreslení křivky v 3D")
+        setTitle("Drawing curve in 3D")
         setLayout(BorderLayout())
 
         initCanvas()
@@ -76,11 +74,18 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
     private fun initCurvesTable() {
         val vertBox = Box.createVerticalBox()
         val buttonBox = Box.createHorizontalBox()
-        buttonBox.add(butAddCurve)
         butAddCurve.addActionListener(this)
+        butAddCurve.setPreferredSize(Dimension(100, 25))
+        butRemoveCurve.setPreferredSize(Dimension(100, 25))
         butRemoveCurve.addActionListener(this)
+        buttonBox.add(Box.createHorizontalGlue())
+        buttonBox.add(butAddCurve)
+        buttonBox.add(Box.createHorizontalStrut(5))
         buttonBox.add(butRemoveCurve)
+        buttonBox.add(Box.createHorizontalGlue())
+        vertBox.add(Box.createVerticalStrut(5))
         vertBox.add(buttonBox)
+        vertBox.add(Box.createVerticalStrut(5))
 
         val curvesTableModel = CurvesTableModel(curves)
         curvesTable.setModel(curvesTableModel)
@@ -115,13 +120,6 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
         canvas.addMouseMotionListener(ren)
         canvas.addKeyListener(ren)
         add(canvas, BorderLayout.CENTER)
-    }
-
-    private fun tryToCenterWindow() {
-        pack()
-        val fSize = getSize()
-        val sSize = getToolkit().getScreenSize()
-        setLocation((sSize.width / 2) - (fSize.width / 2), (sSize.height / 2) - (fSize.height / 2))
     }
 
     override fun mouseEntered(e: MouseEvent) {}
@@ -161,4 +159,11 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
         }
 
     }
+}
+
+public fun Window.tryToCenterWindow() {
+    pack()
+    val fSize = getSize()
+    val sSize = getToolkit().getScreenSize()
+    setLocation((sSize.width / 2) - (fSize.width / 2), (sSize.height / 2) - (fSize.height / 2))
 }
