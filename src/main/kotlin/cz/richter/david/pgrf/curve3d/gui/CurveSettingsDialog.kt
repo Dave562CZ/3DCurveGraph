@@ -15,8 +15,8 @@ import javax.swing.table.TableModel
  * @since 20. 5. 2015
  */
 public class CurveSettingsDialog(private val curves: MutableList<Curve>, private val indexOfExistingCurve: Int = -1, private val tableModel: TableModel) : JDialog(), ActionListener {
-    private val labelNamesBezierAndFerguson = arrayOf("Start point", "Start vector", "End point", "End vector")
-    private val labelNamesCoons = arrayOf("1. point", "2. point", "3. point", "4. point")
+    private val labelNamesBezierAndFerguson = array("Start point", "Start vector", "End point", "End vector")
+    private val labelNamesCoons = array("1. point", "2. point", "3. point", "4. point")
 
     private val comboType = JComboBox<String>()
 
@@ -88,7 +88,7 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
         val vertBox = JPanel(GridLayout(7, 2, 5, 5))
 
         val labelType = JLabel("Type of cubics")
-        comboType.setModel(DefaultComboBoxModel(arrayOf("Bezier", "Ferguson", "Coons")))
+        comboType.setModel(DefaultComboBoxModel(array("Bezier", "Ferguson", "Coons")))
         comboType.addActionListener(this)
         vertBox.add(labelType)
         vertBox.add(comboType)

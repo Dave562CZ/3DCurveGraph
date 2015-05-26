@@ -1,5 +1,6 @@
 package cz.richter.david.pgrf.curve3d.app
 
+import cz.richter.david.pgrf.curve3d.gui.HelpDialog
 import cz.richter.david.pgrf.curve3d.gui.MainWindow
 import javax.swing.SwingUtilities
 
@@ -11,5 +12,12 @@ fun main(args: Array<String>) {
     SwingUtilities.invokeLater(Runnable {
         val window = MainWindow()
         window.initGui()
+    })
+}
+
+public fun showHelp() {
+    SwingUtilities.invokeLater(Runnable {
+        val helpDialog = HelpDialog()
+        helpDialog.initGui()
     })
 }

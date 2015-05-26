@@ -4,6 +4,7 @@ import com.jogamp.opengl.GLCapabilities
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.awt.GLCanvas
 import com.jogamp.opengl.util.FPSAnimator
+import cz.richter.david.pgrf.curve3d.app.showHelp
 import cz.richter.david.pgrf.curve3d.model.*
 import transforms3D.Kubika
 import transforms3D.Point3D
@@ -26,6 +27,7 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
     private val curvesTable = JTable()
     private val butAddCurve = JButton("Add")
     private val butRemoveCurve = JButton("Remove")
+    private val butHelp = JButton("Help")
 
     private val canvas : GLCanvas by Delegates.lazy {
         // setup OpenGL Version 2
@@ -76,12 +78,17 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
         val buttonBox = Box.createHorizontalBox()
         butAddCurve.addActionListener(this)
         butAddCurve.setPreferredSize(Dimension(100, 25))
-        butRemoveCurve.setPreferredSize(Dimension(100, 25))
         butRemoveCurve.addActionListener(this)
+        butRemoveCurve.setPreferredSize(Dimension(100, 25))
+        butHelp.addActionListener(this)
+        butHelp.setPreferredSize(Dimension(100, 25))
+
         buttonBox.add(Box.createHorizontalGlue())
         buttonBox.add(butAddCurve)
         buttonBox.add(Box.createHorizontalStrut(5))
         buttonBox.add(butRemoveCurve)
+        buttonBox.add(Box.createHorizontalStrut(5))
+        buttonBox.add(butHelp)
         buttonBox.add(Box.createHorizontalGlue())
         vertBox.add(Box.createVerticalStrut(5))
         vertBox.add(buttonBox)
@@ -154,6 +161,9 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
                             model.fireTableDataChanged()
                         }
                     }
+                }
+                butHelp -> {
+                    showHelp()
                 }
             }
         }

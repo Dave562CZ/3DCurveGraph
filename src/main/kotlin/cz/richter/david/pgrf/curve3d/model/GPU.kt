@@ -3,6 +3,7 @@ package cz.richter.david.pgrf.curve3d.model
 import com.jogamp.opengl.*
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc
 import com.jogamp.opengl.glu.GLU
+import cz.richter.david.pgrf.curve3d.app.showHelp
 import transforms3D.GLCamera
 import transforms3D.Point3D
 import java.awt.Color
@@ -94,9 +95,7 @@ public class GPU(val curves: List<Curve>) : GLEventListener, KeyListener, MouseM
             KeyEvent.VK_D -> camera.right(SPEED)
             KeyEvent.VK_Q -> camera.up(SPEED)
             KeyEvent.VK_E -> camera.down(SPEED)
-//            KeyEvent.VK_F1 ->
-            else -> {
-            }
+            KeyEvent.VK_F1 -> showHelp()
         }
     }
 
