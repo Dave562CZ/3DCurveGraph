@@ -41,19 +41,17 @@ public class GPU(val curves: List<Curve>) : GLEventListener, KeyListener, MouseM
 
     override fun display(drawable: GLAutoDrawable?) {
         val gl = this.gl //optimalization not sure how expensive is calling delegate
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
-        // nulujeme misto pro kresleni
+
+        gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT)
 
-        // nastaveni modelove transformace
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW)
-        // inicializace na jednotkovou matici
+
         gl.glLoadIdentity()
         camera.set_matrix(glu)
 
-        // nastaveni projekce
         gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION)
-        gl.glLoadIdentity()// inicializace na jednotkovou matici
+        gl.glLoadIdentity()
 
         gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE)
 
