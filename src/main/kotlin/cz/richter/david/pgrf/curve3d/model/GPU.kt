@@ -17,9 +17,8 @@ import kotlin.properties.Delegates
  * @since 16.5.2015
  */
 public class GPU(val curves: List<Curve>) : GLEventListener, KeyListener, MouseMotionListener, MouseListener {
-
-    private val variables: MutableMap<in String, Any?> = HashMap()
-    private val gl: GL2 by Delegates.mapVal(variables)
+    
+    private var gl: GL2 by Delegates.notNull()
     private val glu: GLU = GLU()
     private val camera = GLCamera()
 
@@ -32,7 +31,7 @@ public class GPU(val curves: List<Curve>) : GLEventListener, KeyListener, MouseM
         if (drawable == null) {
             throw IllegalArgumentException("drawable could not be null")
         }
-        variables["gl"] = drawable.getGL().getGL2()
+        gl = drawable.getGL().getGL2()
         println("Init GL is ${gl.javaClass.getName()}")
         println("GL_VENDOR ${gl.glGetString(GL.GL_VENDOR)}") // vyrobce
         println("GL_RENDERER ${gl.glGetString(GL.GL_RENDERER)}") // graficka karta
@@ -40,7 +39,6 @@ public class GPU(val curves: List<Curve>) : GLEventListener, KeyListener, MouseM
     }
 
     override fun display(drawable: GLAutoDrawable?) {
-        val gl = this.gl //optimalization not sure how expensive is calling delegate
 
         gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f)
         gl.glClear(GL.GL_COLOR_BUFFER_BIT)

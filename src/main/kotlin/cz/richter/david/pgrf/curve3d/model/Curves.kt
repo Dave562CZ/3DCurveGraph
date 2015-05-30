@@ -11,7 +11,7 @@ import kotlin.properties.Delegates
  * @author D.Richter
  * @since 16.5.2015
  */
-public trait Curve {
+public interface Curve {
     public fun getLines(): List<Triple<Point3D, Point3D, Color>>
 
     public fun get(index: Int): String
@@ -64,7 +64,7 @@ public class BezierCurve(val begin: Point3D = Point3D(),
             0 -> "Bezier cubics"
             1 -> begin.getCoordsString() + end.getCoordsString()
             2 -> vectorBegin.getCoordsString() + vectorEnd.getCoordsString()
-            else -> throw InvalidArgumentException(array("Index can be only in range 0 - 2"))
+            else -> throw InvalidArgumentException(arrayOf("Index can be only in range 0 - 2"))
         }
     }
 
@@ -89,7 +89,7 @@ public class FergusonCurve(val begin: Point3D = Point3D(),
             0 -> "Ferguson cubics"
             1 -> begin.getCoordsString() + end.getCoordsString()
             2 -> vectorBegin.getCoordsString() + vectorEnd.getCoordsString()
-            else -> throw InvalidArgumentException(array("Index can be only in range 0 - 2"))
+            else -> throw InvalidArgumentException(arrayOf("Index can be only in range 0 - 2"))
         }
     }
 
@@ -115,7 +115,7 @@ public class CoonsCurve(val begin: Point3D = Point3D(),
             0 -> "Coons cubics"
             1 -> begin.getCoordsString() + end.getCoordsString()
             2 -> secondPoint.getCoordsString() + thirdPoint.getCoordsString()
-            else -> throw InvalidArgumentException(array("Index can be only in range 0 - 2"))
+            else -> throw InvalidArgumentException(arrayOf("Index can be only in range 0 - 2"))
         }
     }
 

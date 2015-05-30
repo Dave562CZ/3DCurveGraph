@@ -98,6 +98,7 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
         curvesTable.setModel(curvesTableModel)
         curvesTable.setDefaultRenderer(Any().javaClass , curvesTableModel)
         curvesTable.addMouseListener(this)
+        curvesTable.getColumnModel().getColumn(0).setPreferredWidth(30)
         val scrollPane = JScrollPane(curvesTable)
         vertBox.add(scrollPane)
         add(vertBox, BorderLayout.EAST)
@@ -154,8 +155,13 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
                     dialog.initGui()
                 }
                 butRemoveCurve -> {
+                    val row = curvesTable.getSelectedRow()
+                    if (row < 0) {
+                        JOptionPane.showMessageDialog(this, "No curve was selected to remove", "Error while removing curve", JOptionPane.WARNING_MESSAGE)
+                        return
+                    }
                     if (JOptionPane.showConfirmDialog(this, "Are you sure you want to remove this curve", "Remove curve", JOptionPane.YES_NO_OPTION) == 0) {
-                        curves.remove(curvesTable.getSelectedRow())
+                        curves.remove(row)
                         val model = curvesTable.getModel()
                         if (model is CurvesTableModel) {
                             model.fireTableDataChanged()

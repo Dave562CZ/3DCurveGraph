@@ -20,7 +20,7 @@ public class CurvesTableModel(private val curves: List<Curve>) : AbstractTableMo
         return component
     }
 
-    val columnNames = array("Cubic name", "End points", "Vectors/Middle points")
+    val columnNames = arrayOf("Cubic name", "End points", "Vectors/Middle points")
 
     override fun getColumnName(column: Int): String {
         return columnNames[column]
