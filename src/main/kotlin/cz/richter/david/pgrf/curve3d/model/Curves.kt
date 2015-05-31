@@ -85,7 +85,7 @@ public class BezierCurve(val begin: Point3D = Point3D(),
                          val vectorBegin: Point3D = Point3D(),
                          val end: Point3D = Point3D(),
                          val vectorEnd: Point3D = Point3D(),
-                         val color: Color = Color.WHITE,
+                         val color: Color = Color.BLACK,
                          val numberOfLines: Int = 20)
 : AbstractCurve(Cubics.bezier) {
 
@@ -110,7 +110,7 @@ public class FergusonCurve(val begin: Point3D = Point3D(),
                            val vectorBegin: Point3D = Point3D(),
                            val end: Point3D = Point3D(),
                            val vectorEnd: Point3D = Point3D(),
-                           val color: Color = Color.WHITE,
+                           val color: Color = Color.BLACK,
                            val numberOfLines: Int = 20)
                 : AbstractCurve(Cubics.ferguson) {
 
@@ -136,7 +136,7 @@ public class CoonsCurve(val begin: Point3D = Point3D(),
                         val secondPoint: Point3D = Point3D(),
                         val thirdPoint: Point3D = Point3D(),
                         val end: Point3D = Point3D(),
-                        val color: Color = Color.WHITE,
+                        val color: Color = Color.BLACK,
                         val numberOfLines: Int = 20)
                 : AbstractCurve(Cubics.coons) {
 
