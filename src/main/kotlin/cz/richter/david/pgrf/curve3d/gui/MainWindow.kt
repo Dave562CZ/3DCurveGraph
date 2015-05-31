@@ -16,9 +16,10 @@ import javax.swing.*
 import kotlin.properties.Delegates
 
 /**
-* @author D.Richter
-* @since 16.5.2015
-*/
+ * This class represents main window of the application where curves and their settings is showed
+ * @author D.Richter
+ * @since 16.5.2015
+ */
 public class MainWindow() : JFrame(), MouseListener, ActionListener {
     private val FPS = 30
 
@@ -36,17 +37,18 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
         return@lazy GLCanvas(capabilities)
     }
 
+    /**
+     * Method which creates components of the window and shows the window
+     */
     public fun initGui() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
         setTitle("Drawing curve in 3D")
         setLayout(BorderLayout())
 
         initCanvas()
-        initCurvesTable()
         initInitialCurves()
-        val animator = initAnimator(canvas)
-
-        animator.start()
+        initCurvesTable()
+        initAnimator(canvas)
 
         tryToCenterWindow()
         setVisible(true)
@@ -104,7 +106,7 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
         add(vertBox, BorderLayout.EAST)
     }
 
-    private fun initAnimator(canvas: GLCanvas): FPSAnimator {
+    private fun initAnimator(canvas: GLCanvas) {
         val animator = FPSAnimator(canvas, FPS, true)
 
         addWindowListener(object : WindowAdapter() {
@@ -116,7 +118,7 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
                 }).start()
             }
         })
-        return animator
+        animator.start()
     }
 
     private fun initCanvas() {
@@ -177,6 +179,9 @@ public class MainWindow() : JFrame(), MouseListener, ActionListener {
     }
 }
 
+/**
+ * extension function of Window which tries to move the window in the center of the screen
+ */
 public fun Window.tryToCenterWindow() {
     pack()
     val fSize = getSize()

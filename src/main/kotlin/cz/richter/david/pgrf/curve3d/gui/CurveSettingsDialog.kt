@@ -11,6 +11,7 @@ import javax.swing.*
 import javax.swing.table.TableModel
 
 /**
+ * This class represents dialog which is used for adding end editting curves in application
  * @author David
  * @since 20. 5. 2015
  */
@@ -38,6 +39,9 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
     private val butOK = JButton("OK")
     private val butCancel = JButton("Cancel")
 
+    /**
+     * Method which creates components of the dialog and shows the dialog
+     */
     public fun initGui() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
         setLayout(BorderLayout())
@@ -51,7 +55,7 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
         } else {
             setTitle("Add curve")
             curve = null
-            fillVariables(BezierCurve())
+            fillVariables(BezierCurve())//fill variables with default settings for Bezier curve
         }
         val labels = if (curve != null && curve is CoonsCurve) labelNamesCoons else labelNamesBezierAndFerguson
         setLabelsTexts(labels)
@@ -70,10 +74,10 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
 
     private fun fillVariables(type: Int, p1: Point3D, p2: Point3D, p3: Point3D, p4: Point3D, color: Color) {
         comboType.setSelectedIndex(type)
-        textFirst.setText(p1.getTextForTA())
-        textSecond.setText(p2.getTextForTA())
-        textThird.setText(p3.getTextForTA())
-        textFourth.setText(p4.getTextForTA())
+        textFirst.setText(p1.getTextForTextArea())
+        textSecond.setText(p2.getTextForTextArea())
+        textThird.setText(p3.getTextForTextArea())
+        textFourth.setText(p4.getTextForTextArea())
         pickedColor = color
     }
 
@@ -190,4 +194,7 @@ public class CurveSettingsDialog(private val curves: MutableList<Curve>, private
     }
 }
 
-fun Point3D.getTextForTA(): String = "${x};${y};${z}"
+/**
+ * extension function for Point3D which formats coordinates to format for text area
+ */
+fun Point3D.getTextForTextArea(): String = "${x};${y};${z}"

@@ -53,7 +53,7 @@ public class GPU(val curves: List<Curve>) : GLEventListener, KeyListener, MouseM
 
         gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE)
 
-
+        //drawing of axis
         gl.glLineWidth(1.0f)
         gl.glBegin(GL.GL_LINES)
         gl.glColor3ub(255.toByte(), 0, 0)
@@ -67,6 +67,7 @@ public class GPU(val curves: List<Curve>) : GLEventListener, KeyListener, MouseM
         gl.glVertex3d(0.0, 0.0, 1.0)
         gl.glEnd()
 
+        //drawing of curves
         gl.glLineWidth(5.0f)
         gl.glBegin(GL.GL_LINES)
         for (curve in curves) {

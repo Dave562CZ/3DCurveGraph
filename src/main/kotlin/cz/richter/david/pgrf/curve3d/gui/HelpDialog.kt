@@ -5,11 +5,15 @@ import java.awt.Dimension
 import javax.swing.*
 
 /**
+ * Class representing help window
  * @author David
  * @since 26. 5. 2015
  */
 public class HelpDialog() : JDialog() {
 
+    /**
+     * Method which creates components of the dialog and shows the dialog
+     */
     public fun initGui() {
         setLayout(BorderLayout())
         setTitle("Help dialog")
@@ -40,7 +44,7 @@ public class HelpDialog() : JDialog() {
         mainBox.add(spaceDivider)
         mainBox.add(JLabel("   Author: David Richter"))
         mainBox.add(spaceDivider)
-        mainBox.add(JLabel("   Last modified: 30. 5. 2015"))
+        mainBox.add(JLabel("   Last modified: 31. 5. 2015"))
         mainBox.add(spaceDivider)
         mainBox.add(JLabel("   Application made as project for PGRF3 course"))
 

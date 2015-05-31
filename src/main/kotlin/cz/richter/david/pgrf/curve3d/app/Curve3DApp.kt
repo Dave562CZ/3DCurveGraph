@@ -8,6 +8,10 @@ import javax.swing.SwingUtilities
  * @author D.Richter
  * @since 16.5.2015
  */
+
+/**
+ * Main function used for starting the application
+ */
 fun main(args: Array<String>) {
     SwingUtilities.invokeLater(Runnable {
         val window = MainWindow()
@@ -15,6 +19,10 @@ fun main(args: Array<String>) {
     })
 }
 
+
+/**
+ * function which creates and shows help dialog
+ */
 public fun showHelp() {
     SwingUtilities.invokeLater(Runnable {
         val helpDialog = HelpDialog()

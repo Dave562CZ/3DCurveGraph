@@ -8,28 +8,60 @@ import java.util.ArrayList
 import kotlin.properties.Delegates
 
 /**
+ * Interface which represent one Curve
  * @author D.Richter
  * @since 16.5.2015
  */
 public interface Curve {
+
+    /**
+     * Function which returns immutable list of lines of curve
+     * each line has defined 2 endpoints and color
+     */
     public fun getLines(): List<Triple<Point3D, Point3D, Color>>
 
+    /**
+     * This function is used for showing information in model
+     * it allows to access curve by following syntax.
+     * examples
+     * curve[0] returns name of used cubic
+     * curve[1] returns endpoints
+     * curve[2] returns vectors
+     *
+     * It is especially useful when used from table model @sample [CurvesTableModel.getValueAt]
+     */
     public fun get(index: Int): String
 
+    /**
+     * getter for color of Curve
+     * used for set color of line in table
+     */
     public fun getCurveColor(): Color
 }
 
+/**
+ * Abstract class for curves which implements interface Curve
+ * It encapsulates common functions of all types of curves
+ */
 abstract class AbstractCurve(val cubics: Kubika) : Curve {
     protected val immutableListOfLines: List<Triple<Point3D, Point3D, Color>> by Delegates.lazy {
         return@lazy computeLines()
     }
+
+    /**
+     * Abstract function for definition of computing lines of curve
+     */
     abstract protected fun computeLines(): List<Triple<Point3D, Point3D, Color>>
 
     override public fun getLines(): List<Triple<Point3D, Point3D, Color>> {
         return immutableListOfLines
     }
 
-    protected fun computeLines(begin: Point3D, numberOfLines: Int, color: Color): List<Triple<Point3D, Point3D, Color>> {
+    /**
+     * default implementation of function used for computing lines of curve
+     * can be overridden
+     */
+    protected open fun computeLines(begin: Point3D, numberOfLines: Int, color: Color): List<Triple<Point3D, Point3D, Color>> {
         val list: MutableList<Triple<Point3D, Point3D, Color>> = ArrayList()
         val isCoonsCubics = cubics == Cubics.coons
 
@@ -55,7 +87,7 @@ public class BezierCurve(val begin: Point3D = Point3D(),
                          val vectorEnd: Point3D = Point3D(),
                          val color: Color = Color.WHITE,
                          val numberOfLines: Int = 20)
-                : AbstractCurve(Cubics.bezier) {
+: AbstractCurve(Cubics.bezier) {
 
     override fun getCurveColor(): Color = color
 
@@ -125,12 +157,18 @@ public class CoonsCurve(val begin: Point3D = Point3D(),
     }
 }
 
+/**
+ * Cache object for different Cubic
+ */
 object Cubics {
     val bezier = Kubika(0)
     val ferguson = Kubika(1)
     val coons = Kubika(2)
 }
 
+/**
+ * Extension method of Point3D used for formatting coordinates
+ */
 fun Point3D.getCoordsString(): String {
     return "[${x}; ${y}; ${z}]"
 }
